@@ -60,7 +60,7 @@ This design is what makes DUMP APIs a robust solution as this means a single req
   {
     "users": {
       "user_record_request_id_2": { // Get a User record
-        "id": 45,
+        "_id": "user_record_request_id_1",
         "_with": {
           "_attributes": [ // With specific attributes to be returned
             "name",
@@ -100,7 +100,7 @@ This design is what makes DUMP APIs a robust solution as this means a single req
         }
       },
       "user_record_request_id_4": { // Delete a User record by only defining a "_id" for use with the request record if or "id" for actual identifier.
-        "_id": "user_record_request_id_2"
+        "_id": "user_record_request_id_1"
       }
     }
   }
