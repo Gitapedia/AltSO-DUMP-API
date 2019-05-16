@@ -1,5 +1,5 @@
-# AltSO-Zero-1 ( DUMP API )
-The AltSO-Zero-1 Standard is currently a concept being designed as an alternative to REST API with intentions to design an API interaction style that uses inferred methods for the data being provided allowing for more streamlined communications with an API endpoint without the need for many different routes.
+# AltSO-Z4001 ( DUMP API )
+The AltSO-Z4001 Standard is currently a concept being designed as an alternative to REST API with intentions to design an API interaction style that uses inferred methods for the data being provided allowing for more streamlined communications with an API endpoint without the need for many different routes.
 
 ## Why DUMP?
 The name was a simple naming attempt for simple API design. Because of how you interact with the API by DUMPing data, the name just became apparent from how you work with the API as a DUMP of data.
@@ -25,26 +25,29 @@ This design is what makes DUMP APIs a robust solution as this means a single req
 ```
 [
   {
-    "authors": {
-      "author_record_request_id_1": { // Create a new Author record
+    "authors": [
+      { // Create a new Author record
+        "_reference": "author_record_request_id_1",
         "name": "Mr Author",
         "age": 27,
         "height": 187
       }
-    }
+    ]
   },
   {
-    "users": {
-      "user_record_request_id_1": { // Create a new User record
+    "users": [
+      { // Create a new User record
+        "_reference": "user_record_request_id_1",
         "name": "Jane Smith",
         "age": 36,
         "height": 167
       }
-    }
+    ]
   },
   {
-    "books": {
-      "book_record_request_id_1": { // Create a new Book record
+    "books": [
+      { // Create a new Book record
+        "_reference": "book_record_request_id_1",
         "title": "How to DUMP API",
         "_attach": { // Attach possible relations to this book
           "author": {
@@ -55,11 +58,12 @@ This design is what makes DUMP APIs a robust solution as this means a single req
           }
         }
       }
-    }
+    ]
   },
   {
-    "users": {
-      "user_record_request_id_2": { // Get a User record
+    "users": [
+      { // Get a User record
+        "_reference": "user_record_request_id_2",
         "_id": "user_record_request_id_1",
         "_with": {
           "_attributes": [ // With specific attributes to be returned
@@ -89,7 +93,8 @@ This design is what makes DUMP APIs a robust solution as this means a single req
           }
         }
       },
-      "user_record_request_id_3": { // Update a User record with new attribute values
+      { // Update a User record with new attribute values
+        "_reference": "user_record_request_id_3",
         "_id": "user_record_request_id_2", // Defining "_id" or "id" is how we know what record you want to work with.
         "name": "Jane Smith",
         "height": 165,
@@ -99,10 +104,11 @@ This design is what makes DUMP APIs a robust solution as this means a single req
           }
         }
       },
-      "user_record_request_id_4": { // Delete a User record by only defining a "_id" for use with the request record if or "id" for actual identifier.
+      { // Delete a User record by only defining a "_id" for use with the request record if or "id" for actual identifier.
+        "_reference": "user_record_request_id_4",
         "_id": "user_record_request_id_1"
       }
-    }
+    ]
   }
 ]
 ```
@@ -112,7 +118,9 @@ Any reserved key will be prefixed with an underscore to help avoid conflicts wit
 
 Examples:
 
-`_id` Used in substitution for the actual record id in the database where the identifier can be inferred by a request record id which is the key on each record. You would use this in situations where you may want to create a user and their relation but also attach the user to that relationship in the one request without first knowing the id that will be assigned. By referring to your request record identifier, the processing API logic will track these request record identifiers for their true identifiers and use the correct identifier to execute the logic.
+`_id` Used in substitution for the actual record `id` in the database where the identifier can be inferred by a request record `_reference`. You would use this in situations where you may want to create a user and their relation but also attach the user to that relationship in the one request without first knowing the `id` that will be assigned by the database. By referring to your request record `_reference`, the processing API logic will track these request record references for their true identifiers and use the correct identifier to execute the logiccal relationship `id`.
+
+`_reference` Used to create a data reference for the given record and can be referred to elsewhere in the DUMP logic to maintain relationships for records not yet created and issued with a database identifier. This works with the `_id` key by allowing one DUMP payload to not only create individual records for various resources but to also allow setting up the relationships between relational models without needing to know their respective database identifiers which have not yet been assigned.
 
 `_with` Used to indicate a `READ` of a record where it expects to have either an empty object meaning all attributes returned or the reserved key of `_attributes` and an array of defined attribute keys. Supports for the definition of the `_relations` key for retrieving the relationships for the record back.
 
